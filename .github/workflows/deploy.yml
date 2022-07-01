@@ -1,0 +1,43 @@
+name: Deploy to Amazon ECS
+on: 
+  push:
+    branches:
+      - main                 
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build image
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.key }}
+        port: ${{ secrets.PORT }} 
+        script: |
+          docker build -t estl engineering-assessment-main/.
+  
+  deploy:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build image
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.key }}
+        port: ${{ secrets.PORT }} 
+        script: |
+          docker run -d -it --name app estl
+  
